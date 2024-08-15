@@ -142,7 +142,7 @@ if($action == "delete_payroll"){
 		echo $save;
 }
 if($action == "calculate_payroll"){
-	$save = $crud->calculate_payroll();
+	$save = $crud->calculate_payroll_cmr_for_all_month();
 	if($save)
 		echo $save;
 }
