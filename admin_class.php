@@ -21,7 +21,7 @@ class Action
 	function login()
 	{
 		extract($_POST);
-		$qry = $this->db->query("SELECT * FROM users where username = '" . $username . "' and password = '" . $password . "' ");
+		$qry = $this->db->query("SELECT * FROM users where username = '" . $username . "' and password = '" . $password . "' and is_delete = 0");
 		if ($qry->num_rows > 0) {
 			foreach ($qry->fetch_array() as $key => $value) {
 				if ($key != 'passwors' && !is_numeric($key))
@@ -141,6 +141,7 @@ class Action
 	function save_employee()
 	{
 		extract($_POST);
+		$userId = $_SESSION['login_id'];
 		$data = " firstname='$firstname' ";
 		$data .= ", middlename='$middlename' ";
 		$data .= ", lastname='$lastname' ";
@@ -149,6 +150,8 @@ class Action
 		$data .= ", position_id='$position_id' ";
 		$data .= ", department_id='$department_id' ";
 		$data .= ", salary='$salary' ";
+		$data .= ", cni='$cni' ";
+		$data .= ", user_id='$userId' ";
 
 
 		if (empty($id)) {

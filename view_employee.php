@@ -15,6 +15,7 @@ foreach ($emp as $k => $v) {
 		<p><b>Position : <?php echo ucwords($pname) ?></b></p>
 		<p><b>Numero telephone : <?php echo ucwords($phonenumber) ?></b></p>
 		<p><b>Numero de compte : <?php echo ucwords($bank_account) ?></b></p>
+		<p><b>Numero de CNI : <?php echo ucwords($cni) ?></b></p>
 		<hr class="divider">
 		<div class="row">
 			<div class="col-md-6">

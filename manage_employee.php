@@ -31,6 +31,11 @@ if(isset($_GET['id'])){
 			<label>Numero de telephone:</label>
 			<input type="number" name="phonenumber" required="required" class="form-control" value="<?php echo isset($phonenumber) ? $phonenumber : "" ?>" />
 		</div>
+		
+		<div class="form-group">
+			<label>Numero de CNI:</label>
+			<input type="text" name="cni" required="required" class="form-control" value="<?php echo isset($cni) ? $cni : "" ?>" />
+		</div>
 		<div class="form-group">
 			<label>Department</label>
 			<select class="custom-select browser-default select2" name="department_id">
