@@ -11,33 +11,33 @@ if(isset($_GET['id'])){
 <div class="container-fluid">
 	<form id='employee_frm'>
 		<div class="form-group">
-			<label>Firstname</label>
+			<label>Prénom:</label>
 			<input type="hidden" name="id" value="<?php echo isset($id) ? $id : "" ?>" />
 			<input type="text" name="firstname" required="required" class="form-control" value="<?php echo isset($firstname) ? $firstname : "" ?>" />
 		</div>
 		<div class="form-group">
-			<label>Middlename</label>
+			<label>Nom de famille:</label>
 			<input type="text" name ="middlename" placeholder="(optional)" class="form-control" value="<?php echo isset($middlename) ? $middlename : "" ?>" />
 		</div>
 		<div class="form-group">
-			<label>Lastname:</label>
+			<label>Nom:</label>
 			<input type="text" name="lastname" required="required" class="form-control" value="<?php echo isset($lastname) ? $lastname : "" ?>" />
 		</div>
 		<div class="form-group">
-			<label>Numero de compte:</label>
+			<label>Numéro de compte:</label>
 			<input type="number" name="bank_account" class="form-control" value="<?php echo isset($bank_account) ? $bank_account : "" ?>" />
 		</div>
 		<div class="form-group">
-			<label>Numero de telephone:</label>
+			<label>Numéro de téléphone:</label>
 			<input type="number" name="phonenumber" required="required" class="form-control" value="<?php echo isset($phonenumber) ? $phonenumber : "" ?>" />
 		</div>
 		
 		<div class="form-group">
-			<label>Numero de CNI:</label>
+			<label>Numéro de CNI:</label>
 			<input type="text" name="cni" required="required" class="form-control" value="<?php echo isset($cni) ? $cni : "" ?>" />
 		</div>
 		<div class="form-group">
-			<label>Department</label>
+			<label>Départment:</label>
 			<select class="custom-select browser-default select2" name="department_id">
 				<option value=""></option>
 			<?php
@@ -49,7 +49,7 @@ if(isset($_GET['id'])){
 			</select>
 		</div>
 		<div class="form-group">
-			<label>Position</label>
+			<label>Poste:</label>
 			<select class="custom-select browser-default select2" name="position_id">
 				<option value=""></option>
 			<?php
@@ -61,7 +61,7 @@ if(isset($_GET['id'])){
 			</select>
 		</div>
 		<div class="form-group">
-			<label>Monthly Salary</label>
+			<label>Salaire mensuel:</label>
 			<input type="number" name="salary" required="required" class="form-control text-right" step="any" value="<?php echo isset($salary) ? $salary : "" ?>" />
 		</div>
 	</form>

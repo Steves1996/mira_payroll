@@ -6,16 +6,16 @@
 		<br />
 		<div class="card">
 			<div class="card-header">
-				<span><b>Payroll List</b></span>
-				<button class="btn btn-primary btn-sm btn-block col-md-3 float-right" type="button" id="new_payroll_btn"><span class="fa fa-plus"></span> Add Payroll</button>
+				<span><b>Liste des paies</b></span>
+				<button class="btn btn-primary btn-sm btn-block col-md-3 float-right" type="button" id="new_payroll_btn"><span class="fa fa-plus"></span> Ajouter la paie</button>
 			</div>
 			<div class="card-body">
 				<table id="table" class="table table-bordered table-striped">
 					<thead>
 						<tr>
 							<th>Ref No</th>
-							<th>Date From</th>
-							<th>Date To</th>
+							<th>Date de début</th>
+							<th>Date de fin</th>
 							<th>Status</th>
 							<th>Action</th>
 						</tr>
@@ -82,7 +82,7 @@
 
 		});
 		$('#new_payroll_btn').click(function() {
-			uni_modal("New Payroll", "manage_payroll.php")
+			uni_modal("Nouvelle paie", "manage_payroll.php")
 		})
 		$('.remove_payroll').click(function() {
 			_conf("Are you sure to delete this payroll?", "remove_payroll", [$(this).attr('data-id')])

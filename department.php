@@ -9,12 +9,12 @@
 				<form action="" id="manage-department">
 					<div class="card">
 						<div class="card-header">
-							Department Form
+						Formulaire du département
 						</div>
 						<div class="card-body">
 							<input type="hidden" name="id">
 							<div class="form-group">
-								<label class="control-label">Name</label>
+								<label class="control-label">Nom</label>
 								<textarea name="name" id="" cols="30" rows="2" class="form-control"></textarea>
 							</div>
 
@@ -25,8 +25,8 @@
 						<div class="card-footer">
 							<div class="row">
 								<div class="col-md-12">
-									<button class="btn btn-sm btn-primary col-sm-3 offset-md-3"> Save</button>
-									<button class="btn btn-sm btn-default col-sm-3" type="button" onclick="_reset()"> Cancel</button>
+									<button class="btn btn-sm btn-primary col-sm-4 offset-md-4"> Sauvegarder</button>
+									<button class="btn btn-sm btn-default col-sm-3" type="button" onclick="_reset()"> Annuler</button>
 								</div>
 							</div>
 						</div>
@@ -43,7 +43,7 @@
 							<thead>
 								<tr>
 									<th class="text-center">#</th>
-									<th class="text-center">Department</th>
+									<th class="text-center">Département</th>
 									<th class="text-center">Action</th>
 								</tr>
 							</thead>

@@ -24,17 +24,17 @@ $pay = $conn->query("SELECT * FROM payroll where id = " . $_GET['id'])->fetch_ar
 $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 ?>
 <div>
-    <h2 class="text-center">Payroll - <?php echo $pay['ref_no'] ?></h2>
+    <h2 class="text-center">Paie - <?php echo $pay['ref_no'] ?></h2>
     <hr>
 </div>
 <table>
     <thead>
         <tr>
             <th class="text-center">#</th>
-            <th class="text-center">Employee Name</th>
+            <th class="text-center">Nom & Prénom</th>
             <th class="text-center">Numero de compte</th>
-            <th class="text-center">Numero de telephone</th>
-            <th class="text-center">Net Pay</th>
+            <th class="text-center">Numero de téléphone</th>
+            <th class="text-center">Net a Payer</th>
             <th class="text-center">Signature</th>
         </tr>
     </thead>

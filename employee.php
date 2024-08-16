@@ -6,19 +6,19 @@
 		<br />
 		<div class="card">
 			<div class="card-header">
-				<span><b>Employee List</b></span>
-				<button class="btn btn-primary btn-sm btn-block col-md-3 float-right" type="button" id="new_emp_btn"><span class="fa fa-plus"></span> Add Employee</button>
+				<span><b>Liste des employés</b></span>
+				<button class="btn btn-primary btn-sm btn-block col-md-3 float-right" type="button" id="new_emp_btn"><span class="fa fa-plus"></span> Ajouter un employé</button>
 			</div>
 			<div class="card-body">
 				<table id="table" class="table table-bordered table-striped">
 					<thead>
 						<tr>
 							<th>Employee No</th>
-							<th>Firstname</th>
-							<th>Middlename</th>
-							<th>Lastname</th>
+							<th>Prénom</th>
+							<th>Nom de famille</th>
+							<th>Nom</th>
 							<th>Department</th>
-							<th>Position</th>
+							<th>Poste</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -86,7 +86,7 @@
 
 		});
 		$('#new_emp_btn').click(function() {
-			uni_modal("New Employee", "manage_employee.php")
+			uni_modal("Nouvel employé", "manage_employee.php")
 		})
 		$('.remove_employee').click(function() {
 			_conf("Are you sure to delete this employee?", "remove_employee", [$(this).attr('data-id')])

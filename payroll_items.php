@@ -10,15 +10,15 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 		<br />
 		<div class="card">
 			<div class="card-header">
-				<span><b>Payroll : <?php echo $pay['ref_no'] ?></b></span>
+				<span><b>Paie : <?php echo $pay['ref_no'] ?></b></span>
 
-				<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="new_payroll_btn"><span class="fa fa-plus"></span> Re-Caclulate Payroll</button>
+				<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="new_payroll_btn"><span class="fa fa-plus"></span> Re-calculer la paie</button>
 			</div>
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-12">
-						<p>Payroll Range: <b><?php echo date("M d, Y", strtotime($pay['date_from'])) . " - " . date("M d, Y", strtotime($pay['date_to'])) ?></b></p>
-						<p>Payroll Type: <b><?php echo $pt[$pay['type']] ?></b></p>
+						<p>Tranche de rémunération: <b><?php echo date("M d, Y", strtotime($pay['date_from'])) . " - " . date("M d, Y", strtotime($pay['date_to'])) ?></b></p>
+						<p>Type de paie: <b><?php echo $pt[$pay['type']] ?></b></p>
 						<button class="btn btn-success btn-sm btn-block col-md-2 float-right" type="button" id="print_btn"><span class="fa fa-print"></span> Print</button>
 					</div>
 				</div>
@@ -27,10 +27,10 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 					<thead>
 						<tr>
 							<th>Employee ID</th>
-							<th>Name</th>
-							<th>Total Allowance</th>
-							<th>Total Deduction</th>
-							<th>Net</th>
+							<th>Nom</th>
+							<th>Total Prime</th>
+							<th>Total Déduction</th>
+							<th>Net A Payer</th>
 							<th>Action</th>
 						</tr>
 					</thead>

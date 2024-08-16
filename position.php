@@ -9,12 +9,12 @@
 				<form action="" id="manage-position">
 					<div class="card">
 						<div class="card-header">
-							Position Form
+						Formulaire de poste
 						</div>
 						<div class="card-body">
 							<input type="hidden" name="id">
 							<div class="form-group">
-								<label class="control-label">Department</label>
+								<label class="control-label">Département</label>
 								<select class="custom-select browser-default select2" name="department_id">
 									<option value=""></option>
 									<?php
@@ -35,8 +35,8 @@
 						<div class="card-footer">
 							<div class="row">
 								<div class="col-md-12">
-									<button class="btn btn-sm btn-primary col-sm-3 offset-md-3"> Save</button>
-									<button class="btn btn-sm btn-default col-sm-3" type="button" onclick="_reset()"> Cancel</button>
+									<button class="btn btn-sm btn-primary col-sm-4 offset-md-4"> Sauvegarder</button>
+									<button class="btn btn-sm btn-default col-sm-3" type="button" onclick="_reset()"> Annuler</button>
 								</div>
 							</div>
 						</div>

@@ -8,15 +8,15 @@
 		<form id="manage-payroll">
 				<input type="hidden" name="id" value="">
 				<div class="form-group">
-					<label for="" class="control-label">Date From :</label>
+					<label for="" class="control-label">Date de début :</label>
 					<input type="date" class="form-control" name="date_from">
 				</div>
 				<div class="form-group">
-					<label for="" class="control-label">Date To :</label>
+					<label for="" class="control-label">Date à fin :</label>
 					<input type="date" class="form-control" name="date_to">
 				</div>
 				<div class="form-group">
-					<label for="" class="control-label">Payroll Type :</label>
+					<label for="" class="control-label">Type de paie :</label>
 					<select name="type" class="custom-select browser-default" id="">
 						<option value="1">Monthly</option>
 						<option value="2">Semi-Monthly</option>

@@ -554,7 +554,13 @@ class Action
 			$deduction_legal = $impot_cnps + $impot_with_revenue;
 
 			// Calculer le salaire net
+			/*if ($pay['type'] == 1){
+				$net_salary = $gross_salary - $deduction_legal - $deductions + $allowances;
+			}else{
+				$net_salary = ($gross_salary - $deduction_legal - $deductions + $allowances) / 2;
+			}*/
 			$net_salary = $gross_salary - $deduction_legal - $deductions + $allowances;
+			
 
 			// Afficher ou stocker le résultat
 			// echo "Employé ID: $employee_id - Salaire Net: $net_salary<br>";
