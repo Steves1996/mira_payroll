@@ -24,11 +24,19 @@ if(isset($_GET['id'])){
 			<input type="text" name="lastname" required="required" class="form-control" value="<?php echo isset($lastname) ? $lastname : "" ?>" />
 		</div>
 		<div class="form-group">
+			<label>Numero de compte:</label>
+			<input type="number" name="bank_account" class="form-control" value="<?php echo isset($bank_account) ? $bank_account : "" ?>" />
+		</div>
+		<div class="form-group">
+			<label>Numero de telephone:</label>
+			<input type="number" name="phonenumber" required="required" class="form-control" value="<?php echo isset($phonenumber) ? $phonenumber : "" ?>" />
+		</div>
+		<div class="form-group">
 			<label>Department</label>
 			<select class="custom-select browser-default select2" name="department_id">
 				<option value=""></option>
 			<?php
-			$dept = $conn->query("SELECT * from department order by name asc");
+			$dept = $conn->query("SELECT * from department where is_delete = 0 order by name asc");
 			while($row=$dept->fetch_assoc()):
 			?>
 				<option value="<?php echo $row['id'] ?>" <?php echo isset($department_id) && $department_id == $row['id'] ? "selected" :"" ?>><?php echo $row['name'] ?></option>
@@ -40,7 +48,7 @@ if(isset($_GET['id'])){
 			<select class="custom-select browser-default select2" name="position_id">
 				<option value=""></option>
 			<?php
-			$pos = $conn->query("SELECT * from position order by name asc");
+			$pos = $conn->query("SELECT * from position where is_delete = 0 order by name asc");
 			while($row=$pos->fetch_assoc()):
 			?>
 				<option class="opt" value="<?php echo $row['id'] ?>" data-did="<?php echo $row['department_id'] ?>" <?php echo isset($department_id) && $department_id == $row['department_id'] ? '' :"disabled" ?> <?php echo isset($position_id) && $position_id == $row['id'] ? " selected" : '' ?> ><?php echo $row['name'] ?></option>
@@ -76,7 +84,7 @@ if(isset($_GET['id'])){
 				url:'ajax.php?action=save_employee',
 				method:"POST",
 				data:$(this).serialize(),
-				error:err=>console.log(),
+				error:err=>console.log(err),
 				success:function(resp){
 						if(resp == 1){
 							alert_toast("Employee's data successfully saved","success");

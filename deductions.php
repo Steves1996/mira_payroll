@@ -54,7 +54,7 @@
 							<tbody>
 								<?php
 								$i = 1;
-								$deductions = $conn->query("SELECT * FROM deductions order by id asc");
+								$deductions = $conn->query("SELECT * FROM deductions where is_delete = 0 order by id asc");
 								while ($row = $deductions->fetch_assoc()):
 								?>
 									<tr>

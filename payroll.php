@@ -23,7 +23,7 @@
 					<tbody>
 						<?php
 
-						$payroll = $conn->query("SELECT * FROM payroll order by id desc") or die(mysqli_error());
+						$payroll = $conn->query("SELECT * FROM payroll where is_delete = 0 order by id desc") or die(mysqli_error());
 						while ($row = $payroll->fetch_array()) {
 						?>
 							<tr>
@@ -43,7 +43,7 @@
 											<button class="btn btn-sm btn-outline-primary view_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i></button>
 										<?php endif ?>
 
-										<button class="btn btn-sm btn-outline-primary edit_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-edit"></i></button>
+										<!--<button class="btn btn-sm btn-outline-primary edit_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-edit"></i></button>-->
 										<button class="btn btn-sm btn-outline-danger remove_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-trash"></i></button>
 									</center>
 								</td>

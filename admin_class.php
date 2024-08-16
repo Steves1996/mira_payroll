@@ -144,6 +144,8 @@ class Action
 		$data = " firstname='$firstname' ";
 		$data .= ", middlename='$middlename' ";
 		$data .= ", lastname='$lastname' ";
+		$data .= ", bank_account='$bank_account' ";
+		$data .= ", phonenumber='$phonenumber' ";
 		$data .= ", position_id='$position_id' ";
 		$data .= ", department_id='$department_id' ";
 		$data .= ", salary='$salary' ";
@@ -170,7 +172,7 @@ class Action
 	function delete_employee()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM employee where id = " . $id);
+		$delete = $this->db->query("UPDATE employee set is_delete = 1 where id=" . $id);
 		if ($delete)
 			return 1;
 	}
@@ -192,7 +194,7 @@ class Action
 	function delete_department()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM department where id = " . $id);
+		$delete = $this->db->query("UPDATE department set is_delete = 1 where id=" . $id);
 		if ($delete)
 			return 1;
 	}
@@ -214,7 +216,7 @@ class Action
 	function delete_position()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM position where id = " . $id);
+		$delete = $this->db->query("UPDATE position set is_delete = 1 where id=" . $id);
 		if ($delete)
 			return 1;
 	}
@@ -236,7 +238,7 @@ class Action
 	function delete_allowances()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM allowances where id = " . $id);
+		$delete = $this->db->query("UPDATE allowances set is_delete = 1 where id=" . $id);
 		if ($delete)
 			return 1;
 	}
@@ -259,7 +261,7 @@ class Action
 	function delete_employee_allowance()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM employee_allowances where id = " . $id);
+		$delete = $this->db->query("UPDATE employee_allowances set is_delete = 1 where id=" . $id);
 		if ($delete)
 			return 1;
 	}
@@ -281,7 +283,7 @@ class Action
 	function delete_deductions()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM deductions where id = " . $id);
+		$delete = $this->db->query("UPDATE deductions set is_delete = 1 where id=" . $id);
 		if ($delete)
 			return 1;
 	}
@@ -304,7 +306,7 @@ class Action
 	function delete_employee_deduction()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM employee_deductions where id = " . $id);
+		$delete = $this->db->query("UPDATE employee_deductions set is_delete = 1 where id="  . $id);
 		if ($delete)
 			return 1;
 	}
@@ -370,8 +372,10 @@ class Action
 	function delete_payroll()
 	{
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM payroll where id = " . $id);
-		if ($delete)
+
+		$delete = $this->db->query("UPDATE payroll set is_delete=1 where id=" . $id);
+		$delete_payroll_item = $this->db->query("UPDATE payroll_items set is_delete=1 where payroll_id=" . $id);
+		if ($delete && $delete_payroll_item)
 			return 1;
 	}
 	function calculate_payroll()
@@ -487,7 +491,7 @@ class Action
 
 		$pay = $this->db->query("SELECT * FROM payroll where id = " . $id)->fetch_array();
 
-		$employee = $this->db->query("SELECT * FROM employee");
+		$employee = $this->db->query("SELECT * FROM employee where is_delete = 0 and is_working = 1");
 
 		$deductions = $this->db->query("SELECT * FROM employee_deductions where (effective_date between '" . $pay['date_from'] . "' and '" . $pay['date_to'] . "'  ) ");
 		$allowances = $this->db->query("SELECT * FROM employee_allowances where (effective_date between '" . $pay['date_from'] . "' and '" . $pay['date_to'] . "'  ) ");

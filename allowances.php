@@ -54,7 +54,7 @@
 							<tbody>
 								<?php 
 								$i = 1;
-								$allowances = $conn->query("SELECT * FROM allowances order by id asc");
+								$allowances = $conn->query("SELECT * FROM allowances where is_delete = 0 order by id asc");
 								while($row=$allowances->fetch_assoc()):
 								?>
 								<tr>
