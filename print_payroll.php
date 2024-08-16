@@ -42,9 +42,11 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
         <?php
         $date_from = $pay['date_from'];
         $date_to = $pay['date_to'];
+        $total_salaire = 0;
         $i = 0;
         $payroll = $conn->query("SELECT Distinct e.employee_no, p.*,concat(e.lastname,', ',e.firstname,' ',e.middlename) as ename,e.employee_no,e.salary, e.bank_account, e.phonenumber FROM payroll_items p inner join employee e on e.id = p.employee_id where p.payroll_id = " . $_GET['id']) or die(mysqli_error());
         while ($row = $payroll->fetch_array()) {
+            $total_salaire += $row['net']
         ?>
             <tr>
                 <td><?php echo $i += 1; ?></td>
@@ -57,4 +59,11 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
         }
         ?>
     </tbody>
+
 </table>
+
+<h1>Montant Total:
+    <?php
+    echo  number_format($total_salaire, 0);
+    ?> XAF
+</h1>

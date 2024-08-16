@@ -548,8 +548,13 @@ class Action
 			// Récupérer les primes pour cet employé
 			$allowances = isset($totalAmountsAll[$employee_id]) ? $totalAmountsAll[$employee_id] : 0;
 
+			// calcule de l'impot de la cnps a partir du salaire brute
+			$impot_cnps = $gross_salary * 0.042;
+			$impot_with_revenue = $gross_salary * 0.1;
+			$deduction_legal = $impot_cnps + $impot_with_revenue;
+
 			// Calculer le salaire net
-			$net_salary = $gross_salary - $deductions + $allowances;
+			$net_salary = $gross_salary - $deduction_legal - $deductions + $allowances;
 
 			// Afficher ou stocker le résultat
 			// echo "Employé ID: $employee_id - Salaire Net: $net_salary<br>";

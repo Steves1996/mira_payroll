@@ -31,8 +31,10 @@ if ($row = $result_employee->fetch_assoc()) {
 			</div>
 			<div class="col-md-6">
 				<p><b>Salary : <?php echo number_format($salary, 2) ?> XAF</b></p>
-				<p><b>Total Allowance Amount : <?php echo number_format($allowance_amount, 2) ?> XAF</b></p>
-				<p><b>Total Deduction Amount : <?php echo number_format($deduction_amount, 2) ?> XAF</b></p>
+				<p><b>Total Allowance Amount : <?php echo number_format($allowance_amount, 0) ?> XAF</b></p>
+				<p><b>Total Deduction CNPS Amount (4.2 %) : <?php echo $salary * 0.042 ?> XAF</b></p>
+				<p><b>Total Deduction Revenue : <?php echo $salary * 0.1 ?> XAF</b></p>
+				<p><b>Total Deduction Amount : <?php echo number_format($deduction_amount, 0) ?> XAF</b></p>
 				<p><b>Net Pay : <?php echo number_format($net, 2) ?> XAF</b></p>
 			</div>
 		</div>
