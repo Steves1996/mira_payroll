@@ -60,6 +60,9 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 								<td>
 									<center>
 										<button class="btn btn-sm btn-outline-primary view_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i> View</button>
+										<?php if ($row['is_pay_valide'] == 0): ?>
+											<button class="btn btn-sm btn-outline-primary validate_paroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-save"></i> validate</button>
+										<?php endif; ?>
 									</center>
 								</td>
 							</tr>
@@ -100,6 +103,29 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 		$('.view_payroll').click(function() {
 			var $id = $(this).attr('data-id');
 			uni_modal("Employee Payslip", "view_payslip.php?id=" + $id, "large")
+
+		});
+
+		$('.validate_paroll').click(function() {
+			var $id = $(this).attr('data-id');
+			start_load()
+			$.ajax({
+				url: 'ajax.php?action=validate_payroll_item',
+				method: "POST",
+				data: {
+					id: $(this).attr('data-id')
+				},
+				error: err => console.log(err),
+				success: function(resp) {
+					if (resp == 1) {
+						alert_toast("Payroll successfully validate", "success");
+						setTimeout(function() {
+							location.reload();
+
+						}, 1000)
+					}
+				}
+			})
 
 		});
 

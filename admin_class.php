@@ -589,7 +589,17 @@ class Action
 		$status = 1;
 		$this->db->query("INSERT INTO payroll_validate (payroll_id, department_id, is_validate) VALUES ('$id_pay', '$dep_id', '$status')");
 
-		$update = $this->db->query("UPDATE payroll_items pi JOIN employee e ON pi.employee_id = e.id SET pi.is_pay_valide = 1 WHERE e.department_id = $dep_id");
+		$update = $this->db->query("UPDATE payroll_items pi JOIN employee e ON pi.employee_id = e.id SET pi.is_pay_valide = 1 WHERE e.department_id = $dep_id and payroll_id =$id_pay ");
+		if (isset($update)) {
+			return 1;
+		}
+	}
+
+	function validate_payroll_item()
+	{
+		extract($_POST);
+		$id_payroll_item = $id;
+		$update = $this->db->query("UPDATE payroll_items SET is_pay_valide = 1 WHERE id = $id_payroll_item");
 		if (isset($update)) {
 			return 1;
 		}
