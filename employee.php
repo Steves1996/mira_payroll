@@ -34,7 +34,12 @@
 						while ($row = $pos->fetch_assoc()):
 							$p_arr[$row['id']] = $row['name'];
 						endwhile;
-						$employee_qry = $conn->query("SELECT * FROM employee  where is_delete=0 and is_working = 1") or die(mysqli_error());
+						$department_id = $_SESSION['login_department_id'];
+						if($department_id != 0){
+							$employee_qry = $conn->query("SELECT * FROM employee  where is_delete=0 and is_working = 1 and department_id =$department_id") or die(mysqli_error());
+						}else{
+							$employee_qry = $conn->query("SELECT * FROM employee  where is_delete=0 and is_working = 1 ") or die(mysqli_error());
+						}
 						while ($row = $employee_qry->fetch_array()) {
 						?>
 							<tr>
@@ -71,10 +76,6 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function() {
-
-
-
-
 		$('.edit_employee').click(function() {
 			var $id = $(this).attr('data-id');
 			uni_modal("Edit Employee", "manage_employee.php?id=" + $id)

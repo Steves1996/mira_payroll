@@ -560,7 +560,7 @@ class Action
 				$net_salary = ($gross_salary - $deduction_legal - $deductions + $allowances) / 2;
 			}*/
 			$net_salary = $gross_salary - $deduction_legal - $deductions + $allowances;
-			
+
 
 			// Afficher ou stocker le résultat
 			// echo "Employé ID: $employee_id - Salaire Net: $net_salary<br>";
@@ -579,5 +579,19 @@ class Action
 			return 1;
 		}
 		return 1;
+	}
+
+	function validate_payroll_with_dep()
+	{
+		extract($_POST);
+		$id_pay = $id;
+		$dep_id = $_SESSION['login_department_id'];
+		$status = 1;
+		$this->db->query("INSERT INTO payroll_validate (payroll_id, department_id, is_validate) VALUES ('$id_pay', '$dep_id', '$status')");
+
+		$update = $this->db->query("UPDATE payroll_items pi JOIN employee e ON pi.employee_id = e.id SET pi.is_pay_valide = 1 WHERE e.department_id = $dep_id");
+		if (isset($update)) {
+			return 1;
+		}
 	}
 }

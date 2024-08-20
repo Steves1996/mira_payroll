@@ -146,3 +146,8 @@ if($action == "calculate_payroll"){
 	if($save)
 		echo $save;
 }
+if($action == "validate_payroll_dep"){
+	$save = $crud->validate_payroll_with_dep();
+	if($save)
+		echo $save;
+}

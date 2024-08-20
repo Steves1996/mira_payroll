@@ -20,6 +20,7 @@
 </style>
 <?php include('db_connect.php') ?>
 <?php
+session_start();
 $pay = $conn->query("SELECT * FROM payroll where id = " . $_GET['id'])->fetch_array();
 $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 ?>
@@ -44,8 +45,13 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
         $date_to = $pay['date_to'];
         $total_salaire = 0;
         $i = 0;
-        $payroll = $conn->query("SELECT Distinct e.employee_no, p.*,concat(e.lastname,', ',e.firstname,' ',e.middlename) as ename,e.employee_no,e.salary, e.bank_account, e.phonenumber FROM payroll_items p inner join employee e on e.id = p.employee_id where p.payroll_id = " . $_GET['id']) or die(mysqli_error());
-        while ($row = $payroll->fetch_array()) {
+        $dep_id = $_SESSION['login_department_id'];
+        if($dep_id !=0){
+            $payroll = $conn->query("SELECT Distinct e.employee_no, p.*,concat(e.lastname,', ',e.firstname,' ',e.middlename) as ename,e.employee_no,e.salary, e.bank_account, e.phonenumber FROM payroll_items p inner join employee e on e.id = p.employee_id where e.department_id = $dep_id and p.payroll_id = " . $_GET['id']) or die(mysqli_error());
+        }else{
+            $payroll = $conn->query("SELECT Distinct e.employee_no, p.*,concat(e.lastname,', ',e.firstname,' ',e.middlename) as ename,e.employee_no,e.salary, e.bank_account, e.phonenumber FROM payroll_items p inner join employee e on e.id = p.employee_id where p.payroll_id = " . $_GET['id']) or die(mysqli_error());
+        }
+       while ($row = $payroll->fetch_array()) {
             $total_salaire += $row['net']
         ?>
             <tr>

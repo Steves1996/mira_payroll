@@ -1,6 +1,7 @@
 <?php include('db_connect.php') ?>
 <?php
 $pay = $conn->query("SELECT * FROM payroll where id = " . $_GET['id'])->fetch_array();
+$is_payroll_dep_validate = $conn->query("SELECT * FROM `payroll_validate` where payroll_id = " . $_GET['id'])->fetch_array();
 $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 ?>
 <div class="container-fluid ">
@@ -11,8 +12,13 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 		<div class="card">
 			<div class="card-header">
 				<span><b>Paie : <?php echo $pay['ref_no'] ?></b></span>
+				<?php if ($_SESSION['login_department_id'] == 0): ?>
+					<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="new_payroll_btn"><span class="fa fa-plus"></span> Re-calculer la paie</button>
+				<?php endif; ?>
 
-				<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="new_payroll_btn"><span class="fa fa-plus"></span> Re-calculer la paie</button>
+				<?php if ($is_payroll_dep_validate['is_validate'] == 0): ?>
+					<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="validate_pay_dep"><span class="fa fa-save"></span> Valider les salaires</button>
+				<?php endif; ?>
 			</div>
 			<div class="card-body">
 				<div class="row">
@@ -37,7 +43,12 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 					<tbody>
 						<?php
 						$payroll_id = $pay['id'];
-						$payroll = $conn->query("SELECT p.*,concat(e.lastname,', ',e.firstname,' ',e.middlename) as ename,e.employee_no FROM payroll_items p inner join employee e on e.id = p.employee_id where p.payroll_id=$payroll_id and p.is_delete = 0") or die(mysqli_error());
+						$dep_id = $_SESSION['login_department_id'];
+						if ($dep_id != 0) {
+							$payroll = $conn->query("SELECT p.*,concat(e.lastname,', ',e.firstname,' ',e.middlename) as ename,e.employee_no FROM payroll_items p inner join employee e on e.id = p.employee_id where p.payroll_id=$payroll_id and p.is_delete = 0 and department_id =$dep_id") or die(mysqli_error());
+						} else {
+							$payroll = $conn->query("SELECT p.*,concat(e.lastname,', ',e.firstname,' ',e.middlename) as ename,e.employee_no FROM payroll_items p inner join employee e on e.id = p.employee_id where p.payroll_id=$payroll_id and p.is_delete = 0") or die(mysqli_error());
+						}
 						while ($row = $payroll->fetch_array()) {
 						?>
 							<tr>
@@ -48,9 +59,7 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 								<td><?php echo number_format($row['net'], 2) ?></td>
 								<td>
 									<center>
-
 										<button class="btn btn-sm btn-outline-primary view_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i> View</button>
-
 									</center>
 								</td>
 							</tr>
@@ -106,6 +115,27 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 				success: function(resp) {
 					if (resp == 1) {
 						alert_toast("Payroll successfully computed", "success");
+						setTimeout(function() {
+							location.reload();
+
+						}, 1000)
+					}
+				}
+			})
+		})
+
+		$('#validate_pay_dep').click(function() {
+			start_load()
+			$.ajax({
+				url: 'ajax.php?action=validate_payroll_dep',
+				method: "POST",
+				data: {
+					id: '<?php echo $_GET['id'] ?>'
+				},
+				error: err => console.log(err),
+				success: function(resp) {
+					if (resp == 1) {
+						alert_toast("Payroll successfully validate", "success");
 						setTimeout(function() {
 							location.reload();
 
