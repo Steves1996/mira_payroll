@@ -604,4 +604,42 @@ class Action
 			return 1;
 		}
 	}
+
+
+	function save_cotisation_item()
+	{
+		extract($_POST);
+		$data = " titre='$titre' ";
+		$data .= ", pourcentage = '$pourcentage' ";
+
+		if (empty($id)) {
+			$save = $this->db->query("INSERT INTO cotisation set " . $data);
+		} else {
+			$save = $this->db->query("UPDATE cotisation set " . $data . " where id=" . $id);
+		}
+		if ($save)
+			return 1;
+	}
+
+
+	function delete_cotisation()
+	{
+		extract($_POST);
+		$delete = $this->db->query("UPDATE cotisation set is_delete = 1 where id=" . $id);
+		if ($delete)
+			return 1;
+	}
+
+
+	function enable_cotisation()
+	{
+		extract($_POST);
+		if ($is_enable == 1) {
+			$this->db->query("UPDATE cotisation set is_enable = 0 where id=" . $id);
+			return 1;
+		} else {
+			$this->db->query("UPDATE cotisation set is_enable = 1 where id=" . $id);
+			return 1;
+		}
+	}
 }

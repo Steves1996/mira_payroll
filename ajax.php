@@ -157,3 +157,21 @@ if($action == "validate_payroll_item"){
 	if($save)
 		echo $save;
 }
+
+if($action == "save_cotisation"){
+	$save = $crud->save_cotisation_item();
+	if($save)
+		echo $save;
+}
+
+if($action == "delete_cotisation"){
+	$save = $crud->delete_cotisation();
+	if($save)
+		echo $save;
+}
+
+if($action == "enable_cotisation"){
+	$save = $crud->enable_cotisation();
+	if($save)
+		echo $save;
+}
