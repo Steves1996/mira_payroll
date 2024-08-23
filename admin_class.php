@@ -539,6 +539,7 @@ class Action
 		}*/
 
 		while ($employe = $employee->fetch_assoc()) {
+
 			$employee_id = $employe['id'];
 			$gross_salary = $employe['salary'];
 
@@ -561,10 +562,8 @@ class Action
 			}*/
 			$net_salary = $gross_salary - $deduction_legal - $deductions + $allowances;
 
-
 			// Afficher ou stocker le résultat
 			// echo "Employé ID: $employee_id - Salaire Net: $net_salary<br>";
-
 
 			$data = " payroll_id = '" . $pay['id'] . "' ";
 			$data .= ", employee_id = '" . $employe['id'] . "' ";
@@ -641,5 +640,31 @@ class Action
 			$this->db->query("UPDATE cotisation set is_enable = 1 where id=" . $id);
 			return 1;
 		}
+	}
+
+	function save_year()
+	{
+		extract($_POST);
+		$data = " number='$annee' ";
+		$years = $this->db->query("SELECT * FROM `year`");
+		while ($year = $years->fetch_assoc()) {
+			if ($year['number'] === $annee) {
+				return 0;
+			}
+		}
+		$save = $this->db->query("INSERT INTO `year` SET " . $data);
+		if ($save) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+
+	function delete_year()
+	{
+		extract($_POST);
+		$delete = $this->db->query("UPDATE year set is_delete = 1 where id=" . $id);
+		if ($delete)
+			return 1;
 	}
 }

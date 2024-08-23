@@ -24,6 +24,8 @@
 		<?php if ($_SESSION['login_type'] == 1): ?>
 			<a href="index.php?page=users" class="nav-item nav-users"><span class='icon-field'><i class="fa fa-users"></i></span> Utilisateurs</a>
 			<a href="index.php?page=impot_cotisation" class="nav-item nav-users"><span class='icon-field'><i class="fa fa-bill"></i></span> Impot & Cotisation</a>
+			<a href="index.php?page=year_month" class="nav-item nav-users"><span class='icon-field'><i class="fa fa-calender"></i></span> Periode</a>
+		
 		<?php endif; ?>
 	</div>
 

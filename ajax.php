@@ -175,3 +175,16 @@ if($action == "enable_cotisation"){
 	if($save)
 		echo $save;
 }
+
+if($action == "save_year"){
+	$save = $crud->save_year();
+	if($save)
+		echo $save;
+}
+
+
+if($action == "delete_year"){
+	$save = $crud->delete_year();
+	if($save)
+		echo $save;
+}
