@@ -667,4 +667,59 @@ class Action
 		if ($delete)
 			return 1;
 	}
+
+	function save_semi_payroll()
+	{
+		extract($_POST);
+		$ref_no = date('Y') . '-' . mt_rand(1, 9999);
+		$data = " mois_id='$mois_id' ";
+		$data .= ", year_id = '$year_id' ";
+		$data .= ", ref_no='$ref_no' ";
+
+		$save = $this->db->query("INSERT INTO semi_payroll set " . $data);
+		if ($save)
+			return 1;
+	}
+
+
+	function remove_semi_payroll()
+	{
+		extract($_POST);
+		$delete = $this->db->query("UPDATE semi_payroll set is_delete = 1 where id=" . $id);
+		if ($delete)
+			return 1;
+	}
+
+
+	function save_employee_semi_payroll()
+	{
+		extract($_POST);
+		$data = " semi_payroll_id='$semi_paroll_id' ";
+		$data .= ", employe_id = '$employee_id' ";
+		$data .= ", semi_salary = '$amount' ";
+
+		$employe_semi_payrolls = $this->db->query("SELECT * FROM semi_payrol_items WHERE employe_id= $employee_id and semi_payroll_id=$semi_paroll_id");
+
+		if (count($employe_semi_payrolls->fetch_assoc()) > 0) {
+			return 0;
+		}
+
+		$employes = $this->db->query("SELECT * FROM employee WHERE id=" . $employee_id);
+		while ($employe = $employes->fetch_assoc()) {
+			$semi_salary =  $employe['salary'] / 2;
+			if ($amount > $semi_salary) {
+				return 2;
+			} else {
+				if (empty($id)) {
+					$save = $this->db->query("INSERT INTO semi_payrol_items set " . $data);
+				} else {
+					$save = $this->db->query("UPDATE semi_payrol_items set " . $data . " where id=" . $id);
+				}
+				if ($save)
+					return 1;
+			}
+		}
+		
+		return 1;
+	}
 }

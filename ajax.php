@@ -188,3 +188,21 @@ if($action == "delete_year"){
 	if($save)
 		echo $save;
 }
+
+if($action == "save_semi_payroll"){
+	$save = $crud->save_semi_payroll();
+	if($save)
+		echo $save;
+}
+
+if($action == "remove_semi_payroll"){
+	$save = $crud->remove_semi_payroll();
+	if($save)
+		echo $save;
+}
+
+if($action == "save_employee_semi_payroll"){
+	$save = $crud->save_employee_semi_payroll();
+	if($save)
+		echo $save;
+}
