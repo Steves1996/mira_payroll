@@ -206,3 +206,17 @@ if($action == "save_employee_semi_payroll"){
 	if($save)
 		echo $save;
 }
+
+
+if($action == "remove_semi_payroll_item"){
+	$save = $crud->remove_semi_payroll_item();
+	if($save)
+		echo $save;
+}
+
+
+if($action == "close_semi_payroll"){
+	$save = $crud->close_semi_payroll();
+	if($save)
+		echo $save;
+}

@@ -13,7 +13,7 @@
                     <option value=""></option>
                     <?php
                     $dep_id = $_SESSION['login_department_id'];
-                    $dept = $conn->query("SELECT * from mois ");
+                    $dept = $conn->query("SELECT * from mois m WHERE m.id NOT IN (SELECT mois_id FROM semi_payroll) ");
                     while ($row = $dept->fetch_assoc()):
                     ?>
                         <option value="<?php echo $row['id'] ?>"><?php echo $row['label'] ?></option>
@@ -51,7 +51,19 @@
                     alert_toast("Semi Payroll successfully saved", "success");
                     setTimeout(function() {
                         location.reload()
+                    }, 3000)
+                }
+                if (resp == 0) {
+                    alert_toast("Semi Payroll already create saved", "warning");
+                    setTimeout(function() {
+                        location.reload()
                     }, 1000)
+                }
+                if (resp == 2) {
+                    alert_toast("Vous devez cloturer le mois precedent avant de demarrer un nouveau mois", "warning");
+                    setTimeout(function() {
+                        location.reload()
+                    }, 3000)
                 }
             }
         })

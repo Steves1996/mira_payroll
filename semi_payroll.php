@@ -44,14 +44,13 @@
                                 <td><?php echo $row['date_created'] ?></td>
                                 <td>
                                     <center>
-                                        <button class="btn btn-sm btn-outline-success see_semi_payroll_items" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i></button>
+                                        <button class="btn btn-sm btn-outline-success view_semi_payroll_items" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i></button>
                                         <?php if ($row['is_close'] == 0): ?>
                                             <button class="btn btn-sm btn-outline-primary add_employee_semi_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-plus"></i></button>
-                                            <button class="btn btn-sm btn-outline-primary validate_semi_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-save"></i></button>
+                                            <button class="btn btn-sm btn-outline-primary close_semi_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-save"></i></button>
                                             <button class="btn btn-sm btn-outline-danger remove_semi_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-trash"></i></button>
                                         <?php endif; ?>
-                                        <button class="btn btn-sm btn-outline-warning print_all_payroll_items" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-print"></i></button>
-                                    </center>
+                                        </center>
                                 </td>
                             </tr>
                         <?php
@@ -74,21 +73,25 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('.view_payroll').click(function() {
+        $('.view_semi_payroll_items').click(function() {
             var $id = $(this).attr('data-id');
-            location.href = "index.php?page=payroll_items&id=" + $id;
+            location.href = "index.php?page=semi_payroll_items&id=" + $id;
 
         });
         $('.add_employee_semi_payroll').click(function() {
-			var $id = $(this).attr('data-id');
-			uni_modal("Add Employee semi-payroll", "manage_semi_paie_employee.php?id=" + $id)
+            var $id = $(this).attr('data-id');
+            uni_modal("Add Employee semi-payroll", "manage_semi_paie_employee.php?id=" + $id)
 
-		});
+        });
         $('#new_semi_payroll_btn').click(function() {
             uni_modal("Nouvelle demi-paie", "manage_semi_payroll.php")
         })
         $('.remove_semi_payroll').click(function() {
             _conf("Are you sure to delete this semi payroll?", "remove_semi_payroll", [$(this).attr('data-id')])
+        })
+
+        $('.close_semi_payroll').click(function() {
+            _conf("Est vous sur de vouloir femer cette dperiode d'avance de salaire sachant que vous ne pourriez plus ajouter ni modifier une avence ?", "close_semi_payroll", [$(this).attr('data-id')])
         })
         $('.calculate_payroll').click(function() {
             start_load()
@@ -123,7 +126,30 @@
             error: err => console.log(err),
             success: function(resp) {
                 if (resp == 1) {
-                    alert_toast("Semi-pauroll data successfully deleted", "success");
+                    alert_toast("Semi-payroll data successfully deleted", "success");
+                    setTimeout(function() {
+                        location.reload();
+
+                    }, 1000)
+                }
+            }
+        })
+    }
+
+    
+
+    function close_semi_payroll(id) {
+        start_load()
+        $.ajax({
+            url: 'ajax.php?action=close_semi_payroll',
+            method: "POST",
+            data: {
+                id: id
+            },
+            error: err => console.log(err),
+            success: function(resp) {
+                if (resp == 1) {
+                    alert_toast("Semi-paroll close data successfully deleted", "success");
                     setTimeout(function() {
                         location.reload();
 

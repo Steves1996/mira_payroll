@@ -676,6 +676,16 @@ class Action
 		$data .= ", year_id = '$year_id' ";
 		$data .= ", ref_no='$ref_no' ";
 
+		$semi_payroll = $this->db->query("SELECT * FROM semi_payroll WHERE mois_id=$mois_id AND year_id=$year_id and is_delete = 0");
+		if (count($semi_payroll->fetch_assoc()) > 0) {
+			return 0;
+		}
+
+		$semi_payroll_is_close = $this->db->query("SELECT * FROM semi_payroll WHERE is_delete = 0 and is_close=0");
+		if (count($semi_payroll_is_close->fetch_assoc()) > 0) {
+			return 2;
+		}
+
 		$save = $this->db->query("INSERT INTO semi_payroll set " . $data);
 		if ($save)
 			return 1;
@@ -686,8 +696,13 @@ class Action
 	{
 		extract($_POST);
 		$delete = $this->db->query("UPDATE semi_payroll set is_delete = 1 where id=" . $id);
-		if ($delete)
-			return 1;
+		if ($delete) {
+			$delete_items = $this->db->query("UPDATE semi_payrol_items set is_delete = 1 where semi_payroll_id=" . $id);
+			if ($delete_items)
+				return 1;
+		}
+
+		return 1;
 	}
 
 
@@ -698,7 +713,7 @@ class Action
 		$data .= ", employe_id = '$employee_id' ";
 		$data .= ", semi_salary = '$amount' ";
 
-		$employe_semi_payrolls = $this->db->query("SELECT * FROM semi_payrol_items WHERE employe_id= $employee_id and semi_payroll_id=$semi_paroll_id");
+		$employe_semi_payrolls = $this->db->query("SELECT * FROM semi_payrol_items WHERE employe_id= $employee_id and semi_payroll_id=$semi_paroll_id and is_delete = 0");
 
 		if (count($employe_semi_payrolls->fetch_assoc()) > 0) {
 			return 0;
@@ -709,6 +724,8 @@ class Action
 			$semi_salary =  $employe['salary'] / 2;
 			if ($amount > $semi_salary) {
 				return 2;
+			} else if ($amount % 5000 != 0) {
+				return 3;
 			} else {
 				if (empty($id)) {
 					$save = $this->db->query("INSERT INTO semi_payrol_items set " . $data);
@@ -719,7 +736,28 @@ class Action
 					return 1;
 			}
 		}
-		
+
 		return 1;
+	}
+
+	function remove_semi_payroll_item()
+	{
+		extract($_POST);
+		$delete = $this->db->query("UPDATE semi_payrol_items set is_delete = 1 where id=" . $id);
+		if ($delete)
+			return 1;
+	}
+
+	function close_semi_payroll()
+	{
+		extract($_POST);
+		$update = $this->db->query("UPDATE semi_payroll set is_close = 1 where id=" . $id);
+		if ($update) {
+			$save = $this->db->query("UPDATE semi_payrol_items set is_pay = 1 where semi_payroll_id=" . $id);
+			if ($save) {
+				return 1;
+			}
+		}
+		return 0;
 	}
 }

@@ -64,14 +64,21 @@ if (isset($_GET['id'])) {
                         setTimeout(function() {
                             location.reload();
 
-                        }, 2000)
+                        }, 3000)
                     }
                     if (resp == 2) {
                         alert_toast("Employee's semi salary is to hot", "danger");
                         setTimeout(function() {
                             location.reload();
 
-                        }, 2000)
+                        }, 3000)
+                    }
+                    if (resp == 3) {
+                        alert_toast("Le montant entre doit etre un multiple de 5000", "warning");
+                        setTimeout(function() {
+                            location.reload();
+
+                        }, 3000)
                     }
                 }
             })
