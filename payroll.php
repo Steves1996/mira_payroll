@@ -14,8 +14,8 @@
 					<thead>
 						<tr>
 							<th>Ref No</th>
-							<th>Date de début</th>
-							<th>Date de fin</th>
+							<th>Mois</th>
+							<th>Annee</th>
 							<th>Status</th>
 							<th>Action</th>
 						</tr>
@@ -23,13 +23,13 @@
 					<tbody>
 						<?php
 
-						$payroll = $conn->query("SELECT * FROM payroll where is_delete = 0 order by id desc") or die(mysqli_error());
+						$payroll = $conn->query("SELECT p.ref_no, p.id, m.label, y.number, p.status FROM payroll p JOIN mois m ON m.id = p.mois_id JOIN year y ON y.id = p.year_id where p.is_delete = 0 order by p.id desc") or die(mysqli_error());
 						while ($row = $payroll->fetch_array()) {
 						?>
 							<tr>
 								<td><?php echo $row['ref_no'] ?></td>
-								<td><?php echo date("M d, Y", strtotime($row['date_from'])) ?></td>
-								<td><?php echo date("M d, Y", strtotime($row['date_to'])) ?></td>
+								<td><?php echo $row['label'] ?></td>
+								<td><?php echo $row['number'] ?></td>
 								<?php if ($row['status'] == 0): ?>
 									<td class="text-center"><span class="badge badge-primary">New</span></td>
 								<?php else: ?>

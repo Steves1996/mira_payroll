@@ -347,31 +347,39 @@ class Action
 		if ($delete)
 			return 1;
 	}
+
 	function save_payroll()
 	{
 		extract($_POST);
-		$data = " date_from='$date_from' ";
-		$data .= ", date_to = '$date_to' ";
-		$data .= ", type = '$type' ";
+		$data = " mois_id='$mois_id' ";
+		$data .= ", year_id = '$year_id' ";
 
+		$payrolls = $this->db->query("SELECT * FROM payroll where is_close=0 and is_delete=0");
 
-		if (empty($id)) {
-			$i = 1;
-			while ($i == 1) {
-				$ref_no = date('Y') . '-' . mt_rand(1, 9999);
-				$chk  = $this->db->query("SELECT * FROM payroll where ref_no = '$ref_no' ")->num_rows;
-				if ($chk <= 0) {
-					$i = 0;
+		if ($payrolls->num_rows < 0) {
+			$semi_payrolls = $this->db->query("SELECT * FROM semi_payroll where mois_id= $mois_id and year_id=$year_id");
+			if ($semi_payrolls->num_rows > 0) {
+				while ($semi_payroll = $semi_payrolls->fetch_assoc()) {
+					$ref_no = $semi_payroll['ref_no'];
+					$data .= ", ref_no='$ref_no' ";
+					$save = $this->db->query("INSERT INTO payroll set " . $data);
 				}
+				if ($save)
+					return 1;
+			} else {
+				$ref_no = date('Y') . '-' . mt_rand(1, 9999);
+				$data .= ", ref_no='$ref_no' ";
+				$save = $this->db->query("INSERT INTO payroll set " . $data);
+				if ($save)
+					return 1;
 			}
-			$data .= ", ref_no='$ref_no' ";
-			$save = $this->db->query("INSERT INTO payroll set " . $data);
-		} else {
-			$save = $this->db->query("UPDATE payroll set " . $data . " where id=" . $id);
+			if ($save)
+				return 1;
+		}else{
+			return 2;
 		}
-		if ($save)
-			return 1;
 	}
+
 	function delete_payroll()
 	{
 		extract($_POST);
