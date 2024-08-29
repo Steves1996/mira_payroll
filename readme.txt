@@ -33,3 +33,39 @@ pass: admin123
 
 ****** https://www.campcodes.com/ ******
 Subcribe my Youtube Channel **** SerBermz ****
+
+
+<?php
+
+// Liste des employés avec leur salaire brut
+$employes = [
+    ['nom' => 'Dupont', 'salaire_brut' => 3000],
+    ['nom' => 'Martin', 'salaire_brut' => 2500],
+    ['nom' => 'Durand', 'salaire_brut' => 3500]
+];
+
+// Liste des cotisations en pourcentage
+$cotisations = [
+    'Sécurité sociale' => 7.3,
+    'Retraite' => 6.9,
+    'Chômage' => 2.4
+];
+
+// Fonction pour calculer le salaire net
+function calculerSalaireNet($salaire_brut, $cotisations) {
+    $total_cotisations = 0;
+    foreach ($cotisations as $taux) {
+        $total_cotisations += ($salaire_brut * $taux / 100);
+    }
+    return $salaire_brut - $total_cotisations;
+}
+
+// Calcul et affichage du salaire net pour chaque employé
+foreach ($employes as $employe) {
+    $salaire_net = calculerSalaireNet($employe['salaire_brut'], $cotisations);
+    echo "Employé : " . $employe['nom'] . "\n";
+    echo "Salaire brut : " . $employe['salaire_brut'] . " €\n";
+    echo "Salaire net : " . number_format($salaire_net, 2) . " €\n\n";
+}
+
+?>

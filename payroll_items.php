@@ -1,6 +1,6 @@
 <?php include('db_connect.php') ?>
 <?php
-$pay = $conn->query("SELECT * FROM payroll where id = " . $_GET['id'])->fetch_array();
+$pay = $conn->query("SELECT p.id,p.ref_no, m.label, y.number FROM payroll p JOIN mois m ON m.id = p.mois_id JOIN year y ON y.id = p.year_id where p.id = " . $_GET['id'])->fetch_array();
 $is_payroll_dep_validate = $conn->query("SELECT * FROM `payroll_validate` where payroll_id = " . $_GET['id'])->fetch_array();
 $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 ?>
@@ -23,8 +23,8 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-12">
-						<p>Tranche de rémunération: <b><?php echo date("M d, Y", strtotime($pay['date_from'])) . " - " . date("M d, Y", strtotime($pay['date_to'])) ?></b></p>
-						<p>Type de paie: <b><?php echo $pt[$pay['type']] ?></b></p>
+						<p>Tranche de rémunération: <b><?php echo $pay['label']. " - " . $pay['number'] ?></b></p>
+						<p>Type de paie: <b><?php echo "Mois" ?></b></p>
 						<button class="btn btn-success btn-sm btn-block col-md-2 float-right" type="button" id="print_btn"><span class="fa fa-print"></span> Print</button>
 					</div>
 				</div>
@@ -54,9 +54,9 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 							<tr>
 								<td><?php echo $row['employee_no'] ?></td>
 								<td><?php echo ucwords($row['ename']) ?></td>
-								<td><?php echo number_format($row['allowance_amount'], 2) ?></td>
-								<td><?php echo number_format($row['deduction_amount'], 2) ?></td>
-								<td><?php echo number_format($row['net'], 2) ?></td>
+								<td><?php echo number_format($row['allowance_amount'], 0) ?></td>
+								<td><?php echo number_format($row['deduction_amount'], 0) ?></td>
+								<td><?php echo number_format($row['net'], 0) ?></td>
 								<td>
 									<center>
 										<button class="btn btn-sm btn-outline-primary view_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i> View</button>

@@ -354,30 +354,30 @@ class Action
 		$data = " mois_id='$mois_id' ";
 		$data .= ", year_id = '$year_id' ";
 
-		$payrolls = $this->db->query("SELECT * FROM payroll where is_close=0 and is_delete=0");
+		//$payrolls = $this->db->query("SELECT * FROM payroll where is_close=0 and is_delete=0");
 
-		if ($payrolls->num_rows < 0) {
-			$semi_payrolls = $this->db->query("SELECT * FROM semi_payroll where mois_id= $mois_id and year_id=$year_id");
-			if ($semi_payrolls->num_rows > 0) {
-				while ($semi_payroll = $semi_payrolls->fetch_assoc()) {
-					$ref_no = $semi_payroll['ref_no'];
-					$data .= ", ref_no='$ref_no' ";
-					$save = $this->db->query("INSERT INTO payroll set " . $data);
-				}
-				if ($save)
-					return 1;
-			} else {
-				$ref_no = date('Y') . '-' . mt_rand(1, 9999);
+		//if (isset($payrolls) && count($payrolls->fetch_assoc()) < 0) {
+		$semi_payrolls = $this->db->query("SELECT * FROM semi_payroll where mois_id= $mois_id and year_id=$year_id");
+		if ($semi_payrolls->num_rows > 0) {
+			while ($semi_payroll = $semi_payrolls->fetch_assoc()) {
+				$ref_no = $semi_payroll['ref_no'];
 				$data .= ", ref_no='$ref_no' ";
 				$save = $this->db->query("INSERT INTO payroll set " . $data);
-				if ($save)
-					return 1;
 			}
 			if ($save)
 				return 1;
-		}else{
-			return 2;
+		} else {
+			$ref_no = date('Y') . '-' . mt_rand(1, 9999);
+			$data .= ", ref_no='$ref_no' ";
+			$save = $this->db->query("INSERT INTO payroll set " . $data);
+			if ($save)
+				return 1;
 		}
+		if ($save)
+			return 1;
+		/*} else {
+			return 2;
+		}*/
 	}
 
 	function delete_payroll()
@@ -494,6 +494,16 @@ class Action
 		}
 	}
 
+	// Fonction pour calculer le salaire net
+	function calculerSalaireNet($salaire_brut, $cotisations)
+	{
+		$total_cotisations = 0;
+		foreach ($cotisations as $taux) {
+			$total_cotisations += ($salaire_brut * floatval($taux['pourcentage']) / 100);
+		}
+		return $salaire_brut - $total_cotisations;
+	}
+
 	function calculate_payroll_cmr_for_all_month()
 	{
 		extract($_POST);
@@ -502,10 +512,12 @@ class Action
 
 		$pay = $this->db->query("SELECT * FROM payroll where id = " . $id)->fetch_array();
 
+		$cotisation = $this->db->query("SELECT * FROM cotisation where is_delete = 0");
+
 		$employee = $this->db->query("SELECT * FROM employee where is_delete = 0 and is_working = 1");
 
-		$deductions = $this->db->query("SELECT * FROM employee_deductions where (effective_date between '" . $pay['date_from'] . "' and '" . $pay['date_to'] . "'  ) ");
-		$allowances = $this->db->query("SELECT * FROM employee_allowances where (effective_date between '" . $pay['date_from'] . "' and '" . $pay['date_to'] . "'  ) ");
+		$deductions = $this->db->query("SELECT * FROM employee_deductions where mois_id = $monthId and year_id= $yearId and is_delete=0");
+		$allowances = $this->db->query("SELECT * FROM employee_allowances where mois_id = $monthId and year_id= $yearId and is_delete=0");
 
 		$totalAmountsDed = [];
 		$totalAmountsAll = [];
@@ -558,9 +570,11 @@ class Action
 			$allowances = isset($totalAmountsAll[$employee_id]) ? $totalAmountsAll[$employee_id] : 0;
 
 			// calcule de l'impot de la cnps a partir du salaire brute
-			$impot_cnps = $gross_salary * 0.042;
+			/*$impot_cnps = $gross_salary * 0.042;
 			$impot_with_revenue = $gross_salary * 0.1;
-			$deduction_legal = $impot_cnps + $impot_with_revenue;
+			$deduction_legal = $impot_cnps + $impot_with_revenue;*/
+
+			$salaire_after_all_cotisation = $this->calculerSalaireNet($gross_salary, $cotisation);
 
 			// Calculer le salaire net
 			/*if ($pay['type'] == 1){
@@ -568,7 +582,9 @@ class Action
 			}else{
 				$net_salary = ($gross_salary - $deduction_legal - $deductions + $allowances) / 2;
 			}*/
-			$net_salary = $gross_salary - $deduction_legal - $deductions + $allowances;
+			$net_salary = $salaire_after_all_cotisation - $deductions + $allowances;
+
+
 
 			// Afficher ou stocker le résultat
 			// echo "Employé ID: $employee_id - Salaire Net: $net_salary<br>";

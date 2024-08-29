@@ -23,7 +23,9 @@
 					<tbody>
 						<?php
 
-						$payroll = $conn->query("SELECT p.ref_no, p.id, m.label, y.number, p.status FROM payroll p JOIN mois m ON m.id = p.mois_id JOIN year y ON y.id = p.year_id where p.is_delete = 0 order by p.id desc") or die(mysqli_error());
+						$payroll = $conn->query("SELECT p.ref_no, p.id, m.label, y.number, p.status, m.id monthId, y.id yearId 
+						FROM payroll p JOIN mois m ON m.id = p.mois_id JOIN year y ON y.id = p.year_id 
+						where p.is_delete = 0 order by p.id desc") or die(mysqli_error());
 						while ($row = $payroll->fetch_array()) {
 						?>
 							<tr>
@@ -38,7 +40,7 @@
 								<td>
 									<center>
 										<?php if ($row['status'] == 0): ?>
-											<button class="btn btn-sm btn-outline-primary calculate_payroll" data-id="<?php echo $row['id'] ?>" type="button">Calculate</button>
+											<button class="btn btn-sm btn-outline-primary calculate_payroll" data-id="<?php echo $row['id'] ?>" data-idyear="<?php echo $row['yearId'] ?>" data-idmonth="<?php echo $row['monthId'] ?>" type="button">Calculate</button>
 										<?php else: ?>
 											<button class="btn btn-sm btn-outline-primary view_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i></button>
 										<?php endif ?>
@@ -90,7 +92,9 @@
 				url: 'ajax.php?action=calculate_payroll',
 				method: "POST",
 				data: {
-					id: $(this).attr('data-id')
+					id: $(this).attr('data-id'),
+					yearId: $(this).attr('data-idyear'),
+					monthId: $(this).attr('data-idmonth'),
 				},
 				error: err => console.log(err),
 				success: function(resp) {
