@@ -498,10 +498,26 @@ class Action
 	function calculerSalaireNet($salaire_brut, $cotisations)
 	{
 		$total_cotisations = 0;
+		$contributionDetails = [];
+
 		foreach ($cotisations as $taux) {
+			$deduction = ($salaire_brut * floatval($taux['pourcentage']) / 100);
 			$total_cotisations += ($salaire_brut * floatval($taux['pourcentage']) / 100);
+
+			// Stocker les détails de la cotisation
+			$contributionDetails[] = [
+				"name" => $taux['titre'],
+				"rate" => floatval($taux['pourcentage']) / 100, // En pourcentage
+				"amount" => $deduction
+			];
 		}
-		return $salaire_brut - $total_cotisations;
+
+		$result[] = [
+			"salary_net" => $salaire_brut - $total_cotisations,
+			"cotisation" => $contributionDetails,
+		];
+
+		return $result;
 	}
 
 	function calculate_payroll_cmr_for_all_month()
@@ -519,9 +535,29 @@ class Action
 		$deductions = $this->db->query("SELECT * FROM employee_deductions where mois_id = $monthId and year_id= $yearId and is_delete=0");
 		$allowances = $this->db->query("SELECT * FROM employee_allowances where mois_id = $monthId and year_id= $yearId and is_delete=0");
 
+		$semi_pay = $this->db->query("SELECT * FROM semi_payroll where mois_id = $monthId and year_id= $yearId and is_delete=0")->fetch_array();
+		$idSemiPay = $semi_pay['id'];
+		$semi_pay_items = $this->db->query("SELECT * FROM semi_payrol_items where semi_payroll_id = $idSemiPay  and is_delete=0");
+
+
 		$totalAmountsDed = [];
 		$totalAmountsAll = [];
 
+		$totalAmountsAllSemiPay = [];
+
+
+		//**DEDUCTION DE CHAQUE EMPLOYEE */
+		while ($row = $semi_pay_items->fetch_assoc()) {
+			$employee_id = $row['employe_id'];
+			$amount = $row['semi_salary'];
+
+			// Ajout les détails des déductions dans un tableau associatif par employee_id
+			$ded[$employee_id][] = array('did' => $row['id'], "amount" => $amount);
+			if (!isset($totalAmountsAllSemiPay[$employee_id])) {
+				$totalAmountsAllSemiPay[$employee_id] = 0; // Initialiser à 0 si non existant
+			}
+			$totalAmountsAllSemiPay[$employee_id] += $amount;
+		}
 
 		//**DEDUCTION DE CHAQUE EMPLOYEE */
 		while ($row = $deductions->fetch_assoc()) {
@@ -560,8 +596,11 @@ class Action
 
 		while ($employe = $employee->fetch_assoc()) {
 
+			// Avance salaire chaque employee
+			$avance_salaire = isset($totalAmountsAllSemiPay[$employee_id]) ? $totalAmountsAllSemiPay[$employee_id] : 0;
+
 			$employee_id = $employe['id'];
-			$gross_salary = $employe['salary'];
+			$gross_salary = $employe['salary'] - $avance_salaire;
 
 			// Récupérer les déductions pour cet employé
 			$deductions = isset($totalAmountsDed[$employee_id]) ? $totalAmountsDed[$employee_id] : 0;
@@ -569,33 +608,45 @@ class Action
 			// Récupérer les primes pour cet employé
 			$allowances = isset($totalAmountsAll[$employee_id]) ? $totalAmountsAll[$employee_id] : 0;
 
+			
+
+
 			// calcule de l'impot de la cnps a partir du salaire brute
 			/*$impot_cnps = $gross_salary * 0.042;
 			$impot_with_revenue = $gross_salary * 0.1;
 			$deduction_legal = $impot_cnps + $impot_with_revenue;*/
 
+
+
 			$salaire_after_all_cotisation = $this->calculerSalaireNet($gross_salary, $cotisation);
 
-			// Calculer le salaire net
-			/*if ($pay['type'] == 1){
+			foreach ($salaire_after_all_cotisation as $salaire_cotisation) {
+				$net_salary = $salaire_cotisation['salary_net'] - $deductions + $allowances;
+				$cotisation_employe = json_encode($salaire_cotisation['cotisation']);
+
+				// Calculer le salaire net
+				/*if ($pay['type'] == 1){
 				$net_salary = $gross_salary - $deduction_legal - $deductions + $allowances;
 			}else{
 				$net_salary = ($gross_salary - $deduction_legal - $deductions + $allowances) / 2;
 			}*/
-			$net_salary = $salaire_after_all_cotisation - $deductions + $allowances;
+				//$net_salary = $salaire_after_all_cotisation - $deductions + $allowances;
 
 
 
-			// Afficher ou stocker le résultat
-			// echo "Employé ID: $employee_id - Salaire Net: $net_salary<br>";
+				// Afficher ou stocker le résultat
+				// echo "Employé ID: $employee_id - Salaire Net: $net_salary<br>";
 
-			$data = " payroll_id = '" . $pay['id'] . "' ";
-			$data .= ", employee_id = '" . $employe['id'] . "' ";
-			$data .= ", salary = '$gross_salary' ";
-			$data .= ", allowance_amount = '$allowances' ";
-			$data .= ", deduction_amount = '$deductions' ";
-			$data .= ", net = '$net_salary' ";
-			$save[] = $this->db->query("INSERT INTO payroll_items set " . $data);
+				$data = " payroll_id = '" . $pay['id'] . "' ";
+				$data .= ", employee_id = '" . $employe['id'] . "' ";
+				$data .= ", salary = '$gross_salary' ";
+				$data .= ", allowance_amount = '$allowances' ";
+				$data .= ", deduction_amount = '$deductions' ";
+				$data .= ", avance_salaire = '$avance_salaire' ";
+				$data .= ", cotisation = '$cotisation_employe' ";
+				$data .= ", net = '$net_salary' ";
+				$save[] = $this->db->query("INSERT INTO payroll_items set " . $data);
+			}
 		}
 		if (isset($save)) {
 			$this->db->query("UPDATE payroll set status = 1 where id = " . $pay['id']);
