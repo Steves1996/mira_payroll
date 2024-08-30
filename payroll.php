@@ -23,7 +23,7 @@
 					<tbody>
 						<?php
 
-						$payroll = $conn->query("SELECT p.ref_no, p.id, m.label, y.number, p.status, m.id monthId, y.id yearId 
+						$payroll = $conn->query("SELECT p.is_close, p.ref_no, p.id, m.label, y.number, p.status, m.id monthId, y.id yearId 
 						FROM payroll p JOIN mois m ON m.id = p.mois_id JOIN year y ON y.id = p.year_id 
 						where p.is_delete = 0 order by p.id desc") or die(mysqli_error());
 						while ($row = $payroll->fetch_array()) {
@@ -44,9 +44,10 @@
 										<?php else: ?>
 											<button class="btn btn-sm btn-outline-primary view_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-eye"></i></button>
 										<?php endif ?>
-
-										<!--<button class="btn btn-sm btn-outline-primary edit_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-edit"></i></button>-->
-										<button class="btn btn-sm btn-outline-danger remove_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-trash"></i></button>
+										<?php if ($row['is_close'] == 0): ?>
+											<!--<button class="btn btn-sm btn-outline-primary edit_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-edit"></i></button>-->
+											<button class="btn btn-sm btn-outline-danger remove_payroll" data-id="<?php echo $row['id'] ?>" type="button"><i class="fa fa-trash"></i></button>
+										<?php endif ?>
 									</center>
 								</td>
 							</tr>

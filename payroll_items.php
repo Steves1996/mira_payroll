@@ -12,13 +12,7 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 		<div class="card">
 			<div class="card-header">
 				<span><b>Paie : <?php echo $pay['ref_no'] ?></b></span>
-				<?php if ($_SESSION['login_department_id'] == 0): ?>
-					<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="new_payroll_btn"><span class="fa fa-plus"></span> Re-calculer la paie</button>
-				<?php endif; ?>
-
-				<?php if ($is_payroll_dep_validate['is_validate'] == 0): ?>
-					<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="validate_pay_dep"><span class="fa fa-save"></span> Valider les salaires</button>
-				<?php endif; ?>
+				
 			</div>
 			<div class="card-body">
 				<div class="row">
@@ -36,6 +30,7 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 							<th>Nom</th>
 							<th>Total Prime</th>
 							<th>Total Déduction</th>
+							<th>15e</th>
 							<th>Net A Payer</th>
 							<th>Action</th>
 						</tr>
@@ -56,6 +51,7 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 								<td><?php echo ucwords($row['ename']) ?></td>
 								<td><?php echo number_format($row['allowance_amount'], 0) ?></td>
 								<td><?php echo number_format($row['deduction_amount'], 0) ?></td>
+								<td><?php echo number_format($row['avance_salaire'], 0) ?></td>
 								<td><?php echo number_format($row['net'], 0) ?></td>
 								<td>
 									<center>

@@ -8,7 +8,7 @@ $payroll = $conn->query("SELECT p.*,concat(e.lastname,', ',e.firstname,' ',e.mid
 foreach ($payroll->fetch_array() as $key => $value) {
 	$$key = $value;
 }
-$pay = $conn->query("SELECT * FROM payroll where id = " . $payroll_id)->fetch_array();
+$pay = $conn->query("SELECT p.id,p.ref_no, m.label, y.number,p.mois_id, p.year_id FROM payroll p JOIN mois m ON m.id = p.mois_id JOIN year y ON y.id = p.year_id where p.id = " . $payroll_id)->fetch_array();
 $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
 
 $result_employee = $conn->query("SELECT * FROM employee WHERE employee_no ='" . $employee_no . "'");
@@ -26,15 +26,18 @@ if ($row = $result_employee->fetch_assoc()) {
 		<div class="row">
 			<div class="col-md-6">
 				<p><b>Payroll Ref : <?php echo $pay['ref_no'] ?></b></p>
-				<p><b>Payroll Range : <?php echo date("M d, Y", strtotime($pay['date_from'])) . " - " . date("M d, Y", strtotime($pay['date_to'])) ?></b></p>
-				<p><b>Payroll type : <?php echo $pt[$pay['type']] ?></b></p>
+				<p><b>Payroll Range : <?php echo $pay['label'] . " - " . $pay['number'] ?></b></p>
+				<p><b>Payroll type : <?php echo "Mois" ?></b></p>
 			</div>
 			<div class="col-md-6">
 				<p><b>Salary : <?php echo number_format($salary, 2) ?> XAF</b></p>
 				<p><b>Total Allowance Amount : <?php echo number_format($allowance_amount, 0) ?> XAF</b></p>
-				<p><b>Total Deduction CNPS Amount (4.2 %) : <?php echo $salary * 0.042 ?> XAF</b></p>
-				<p><b>Total Deduction Revenue : <?php echo $salary * 0.1 ?> XAF</b></p>
+				<?php $contributions = json_decode($cotisation, true);
+				foreach ($contributions as $contribution) { ?>
+					<p><b><?php echo $contribution['name'] ?> : <?php echo $contribution['amount'] ?> XAF</b></p>
+				<?php } ?>
 				<p><b>Total Deduction Amount : <?php echo number_format($deduction_amount, 0) ?> XAF</b></p>
+				<p><b>Avance salaire : <?php echo number_format($avance_salaire, 0) ?> XAF</b></p>
 				<p><b>Net Pay : <?php echo number_format($net, 2) ?> XAF</b></p>
 			</div>
 		</div>
@@ -51,9 +54,7 @@ if ($row = $result_employee->fetch_assoc()) {
 					<div class="card-body">
 						<ul class="list-group">
 							<?php
-							$date_from = $pay['date_from'];
-							$date_to = $pay['date_to'];
-							$all_qry = $conn->query("SELECT * from allowances a join employee_allowances ea ON ea.allowance_id = a.id WHERE ea.effective_date BETWEEN '" . $date_from . "' and '" . $date_to . "' AND ea.employee_id = $employee_id");
+							$all_qry = $conn->query("SELECT * from allowances a join employee_allowances ea ON ea.allowance_id = a.id WHERE ea.mois_id = '" . $pay['mois_id'] . "' and  ea.year_id ='" . $pay['year_id'] . "' AND ea.employee_id = $employee_id");
 							while ($row = $all_qry->fetch_assoc()) {
 							?>
 								<li class="list-group-item d-flex justify-content-between align-items-center">
@@ -75,9 +76,7 @@ if ($row = $result_employee->fetch_assoc()) {
 					<div class="card-body">
 						<ul class="list-group">
 							<?php
-							$date_from = $pay['date_from'];
-							$date_to = $pay['date_to'];
-							$all_qry = $conn->query("SELECT * from deductions d join employee_deductions ea ON ea.deduction_id = d.id WHERE ea.effective_date BETWEEN '" . $date_from . "' and '" . $date_to . "' AND ea.employee_id = $employee_id");
+							$all_qry = $conn->query("SELECT * from deductions d join employee_deductions ea ON ea.deduction_id = d.id WHERE ea.mois_id = '" . $pay['mois_id'] . "' and  ea.year_id ='" . $pay['year_id'] . "' AND ea.employee_id = $employee_id");
 							while ($row = $all_qry->fetch_assoc()) {
 							?>
 								<li class="list-group-item d-flex justify-content-between align-items-center">

@@ -35,14 +35,13 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
             <th class="text-center">Nom & Prénom</th>
             <th class="text-center">Numero de compte</th>
             <th class="text-center">Numero de téléphone</th>
+            <th class="text-center">Avance salaire</th>
             <th class="text-center">Net a Payer</th>
             <th class="text-center">Signature</th>
         </tr>
     </thead>
     <tbody>
         <?php
-        $date_from = $pay['date_from'];
-        $date_to = $pay['date_to'];
         $total_salaire = 0;
         $i = 0;
         $dep_id = $_SESSION['login_department_id'];
@@ -59,6 +58,7 @@ $pt = array(1 => "Monhtly", 2 => "Semi-Monthly");
                 <td><?php echo ucwords($row['ename']) ?></td>
                 <td class="text-right"><?php echo $row['bank_account'] ?></td>
                 <td class="text-right"><?php echo $row['phonenumber'] ?></td>
+                <td class="text-right"><?php echo $row['avance_salaire'] ?> XAF</td>
                 <td class="text-right"><?php echo number_format($row['net'], 0) ?> XAF</td>
             </tr>
         <?php

@@ -597,9 +597,10 @@ class Action
 		while ($employe = $employee->fetch_assoc()) {
 
 			// Avance salaire chaque employee
-			$avance_salaire = isset($totalAmountsAllSemiPay[$employee_id]) ? $totalAmountsAllSemiPay[$employee_id] : 0;
 
 			$employee_id = $employe['id'];
+			
+			$avance_salaire = isset($totalAmountsAllSemiPay[$employee_id]) ? $totalAmountsAllSemiPay[$employee_id] : 0;
 			$gross_salary = $employe['salary'] - $avance_salaire;
 
 			// Récupérer les déductions pour cet employé
@@ -649,7 +650,7 @@ class Action
 			}
 		}
 		if (isset($save)) {
-			$this->db->query("UPDATE payroll set status = 1 where id = " . $pay['id']);
+			$this->db->query("UPDATE payroll set status = 1, is_close = 1 where id = " . $pay['id']);
 			return 1;
 		}
 		return 1;

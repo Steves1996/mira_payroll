@@ -27,7 +27,7 @@ foreach ($emp as $k => $v) {
 					<div class="card-body">
 						<ul class="list-group">
 							<?php
-							$allowances = $conn->query("SELECT ea.*,a.allowance as aname FROM employee_allowances ea inner join allowances a on a.id = ea.allowance_id where ea.is_delete = 0 and ea.employee_id=" . $_GET['id'] . " order by ea.type asc,date(ea.effective_date) asc, a.allowance asc ");
+							$allowances = $conn->query("SELECT ea.*,a.allowance as aname FROM employee_allowances ea inner join allowances a on a.id = ea.allowance_id where ea.is_delete = 0 and ea.employee_id=" . $_GET['id'] . " ");
 							$t_arr = array(1 => "Monthly", 2 => "Semi-Monthly", 3 => "Once");
 							while ($row = $allowances->fetch_assoc()):
 							?>
@@ -56,7 +56,7 @@ foreach ($emp as $k => $v) {
 					<div class="card-body">
 						<ul class="list-group">
 							<?php
-							$deductions = $conn->query("SELECT ea.*,d.deduction as dname FROM employee_deductions ea inner join deductions d on d.id = ea.deduction_id where ea.is_delete = 0 and ea.employee_id=" . $_GET['id'] . " order by ea.type asc,date(ea.effective_date) asc, d.deduction asc ");
+							$deductions = $conn->query("SELECT ea.*,d.deduction as dname FROM employee_deductions ea inner join deductions d on d.id = ea.deduction_id where ea.is_delete = 0 and ea.employee_id=" . $_GET['id'] . " ");
 							$t_arr = array(1 => "Monthly", 2 => "Semi-Monthly", 3 => "Once");
 							while ($row = $deductions->fetch_assoc()):
 							?>
