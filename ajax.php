@@ -220,3 +220,10 @@ if($action == "close_semi_payroll"){
 	if($save)
 		echo $save;
 }
+
+if($action == "download_txt_employee"){
+	//$save = $crud->downloadXlxsEmployee();
+	$save = $crud->downloadTxtEmployee();
+	if($save)
+		echo $save;
+}

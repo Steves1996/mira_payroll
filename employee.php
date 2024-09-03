@@ -8,6 +8,8 @@
 			<div class="card-header">
 				<span><b>Liste des employés</b></span>
 				<button class="btn btn-primary btn-sm btn-block col-md-3 float-right" type="button" id="new_emp_btn"><span class="fa fa-plus"></span> Ajouter un employé</button>
+				<button class="btn btn-primary btn-sm btn-block col-md-3 float-right" type="button" id="exp_emp_btn"><span class="fa fa-plus"></span> exporter</button>
+
 			</div>
 			<div class="card-body">
 				<table id="table" class="table table-bordered table-striped">
@@ -35,9 +37,9 @@
 							$p_arr[$row['id']] = $row['name'];
 						endwhile;
 						$department_id = $_SESSION['login_department_id'];
-						if($department_id != 0){
+						if ($department_id != 0) {
 							$employee_qry = $conn->query("SELECT * FROM employee  where is_delete=0 and is_working = 1 and department_id =$department_id") or die(mysqli_error());
-						}else{
+						} else {
 							$employee_qry = $conn->query("SELECT * FROM employee  where is_delete=0 and is_working = 1 ") or die(mysqli_error());
 						}
 						while ($row = $employee_qry->fetch_array()) {
@@ -89,6 +91,10 @@
 		$('#new_emp_btn').click(function() {
 			uni_modal("Nouvel employé", "manage_employee.php")
 		})
+
+		$('#exp_emp_btn').click(function() {
+			_conf("Exporter en txt", "download_txt_employee")
+		})
 		$('.remove_employee').click(function() {
 			_conf("Are you sure to delete this employee?", "remove_employee", [$(this).attr('data-id')])
 		})
@@ -111,6 +117,27 @@
 
 					}, 1000)
 				}
+			}
+		})
+	}
+
+
+	function download_txt_employee(id) {
+		start_load()
+		$.ajax({
+			url: 'ajax.php?action=download_txt_employee',
+			method: "POST",
+			data: {
+				id: id
+			},
+			error: err => console.log(err),
+			success: function(resp) {
+				alert_toast("Employee's data eexport successfully deleted", "success");
+				alert(resp);
+				setTimeout(function() {
+					location.reload();
+
+				}, 1000)
 			}
 		})
 	}

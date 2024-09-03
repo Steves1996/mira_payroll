@@ -1,0 +1,7 @@
+ID	Nom	Prénom	Salaire
+1	Totio	Steves	150000
+2	Djamal	Dini	200000
+3	Alima	Mira	50000
+4	Clarisse	mira	80000
+5	Henry	mira	3997700
+6	asacs	asdasd	500000

@@ -1,5 +1,10 @@
 <?php
 session_start();
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 ini_set('display_errors', 1);
 class Action
 {
@@ -150,6 +155,7 @@ class Action
 		$data .= ", position_id='$position_id' ";
 		$data .= ", department_id='$department_id' ";
 		$data .= ", salary='$salary' ";
+		$data .= ", day_salary='$day_salary' ";
 		$data .= ", cni='$cni' ";
 		$data .= ", user_id='$userId' ";
 
@@ -599,7 +605,7 @@ class Action
 			// Avance salaire chaque employee
 
 			$employee_id = $employe['id'];
-			
+
 			$avance_salaire = isset($totalAmountsAllSemiPay[$employee_id]) ? $totalAmountsAllSemiPay[$employee_id] : 0;
 			$gross_salary = $employe['salary'] - $avance_salaire;
 
@@ -609,7 +615,7 @@ class Action
 			// Récupérer les primes pour cet employé
 			$allowances = isset($totalAmountsAll[$employee_id]) ? $totalAmountsAll[$employee_id] : 0;
 
-			
+
 
 
 			// calcule de l'impot de la cnps a partir du salaire brute
@@ -835,5 +841,64 @@ class Action
 			}
 		}
 		return 0;
+	}
+
+	function downloadTxtEmployee()
+	{
+		$result = $this->db->query("SELECT id, firstname, lastname, salary FROM employee");
+		if ($result->num_rows > 0) {
+			$txt = "ID\tNom\tPrénom\tSalaire\n";
+			while ($row = $result->fetch_assoc()) {
+				$txt .= $row["id"] . "\t" . $row["firstname"] . "\t" . $row["lastname"] . "\t" . $row["salary"] . "\n";
+			}
+			$filename = "employees_" . date('Y-m-d') . ".txt";
+			$filepath = "txtfiles/" . $filename;
+			if (!file_exists('txtfiles')) {
+				mkdir('txtfiles', 0777, true);
+			}
+			file_put_contents($filepath, $txt);
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			return "Le fichier a été généré avec succès. <a href='$filepath'>Télécharger le fichier</a>";
+		} else {
+			echo "Aucun employé trouvé.";
+			return 0;
+		}
+	}
+
+
+	function downloadXlxsEmployee()
+	{
+		$result = $this->db->query("SELECT id, firstname, lastname, salary FROM employee");
+		if ($result->num_rows > 0) {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+
+			$sheet->setCellValue('A1', 'ID');
+			$sheet->setCellValue('B1', 'Nom');
+			$sheet->setCellValue('C1', 'Prénom');
+			$sheet->setCellValue('E1', 'Salaire');
+
+			$rowNumber = 2;
+			while ($row = $result->fetch_assoc()) {
+				$sheet->setCellValue('A' . $rowNumber, $row['id']);
+				$sheet->setCellValue('B' . $rowNumber, $row['firstname']);
+				$sheet->setCellValue('C' . $rowNumber, $row['lastname']);
+				$sheet->setCellValue('E' . $rowNumber, $row['salary']);
+				$rowNumber++;
+			}
+
+			$filename = "employees_" . date('Y-m-d') . ".xlsx";
+			$filepath = "xlxsfiles/" . $filename;
+			if (!file_exists('xlxsfiles')) {
+				mkdir('xlxsfiles', 0777, true);
+			}
+			$writer = new Xlsx($spreadsheet);
+			$writer->save($filepath);
+			return "Le fichier a été généré avec succès. <a href='$filepath'>Télécharger le fichier</a>";
+		} else {
+			echo "Aucun employé trouvé.";
+			return 0;
+		}
 	}
 }

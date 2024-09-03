@@ -62,6 +62,10 @@ if (isset($_GET['id'])) {
 			</select>
 		</div>
 		<div class="form-group">
+			<label>Salaire Journalier:</label>
+			<input type="number" name="day_salary" required="required" class="form-control text-right" step="any" value="<?php echo isset($day_salary) ? $day_salary : "" ?>" />
+		</div>
+		<div class="form-group">
 			<label>Salaire mensuel:</label>
 			<input type="number" name="salary" required="required" class="form-control text-right" step="any" value="<?php echo isset($salary) ? $salary : "" ?>" />
 		</div>
